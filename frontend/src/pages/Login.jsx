@@ -34,7 +34,7 @@ function Login() {
         );
 
         alert("Đăng nhập thành công");
-        navigate("/");
+        navigate(["admin", "owner"].includes(data.user.role) ? "/admin" : "/");
       } else {
         alert(data.message);
       }

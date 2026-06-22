@@ -8,13 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('giohang', function (Blueprint $table) {
-            $table->string('maGioHang')->primary();
-            $table->string('sdt');
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
+        if (Schema::hasTable('giohang')) {
+            return;
+        }
 
-            $table->foreign('sdt')->references('sdt')->on('nguoidung')->onDelete('cascade')->onUpdate('cascade');
+        Schema::create('giohang', function (Blueprint $table) {
+            $table->char('maGioHang', 10)->primary();
+            $table->char('sdt', 10);
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

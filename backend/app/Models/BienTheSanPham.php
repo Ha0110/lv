@@ -48,4 +48,13 @@ class BienTheSanPham extends Model
             'maBienThe'
         );
     }
+
+    public function khuyenMaiQuaTangs()
+    {
+        return $this->hasMany(
+            KhuyenMai::class,
+            'maBienTheQuaTang',
+            'maBienThe'
+        );
+    }
 }

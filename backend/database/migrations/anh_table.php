@@ -13,13 +13,9 @@ return new class extends Migration
         }
 
         Schema::create('anh', function (Blueprint $table) {
-            $table->string('maAnh')->primary();
-            $table->string('maBienThe');
-            $table->string('duongDan');
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
-
-            $table->foreign('maBienThe')->references('maBienThe')->on('bienthesanpham')->onDelete('cascade')->onUpdate('cascade');
+            $table->char('maAnh', 10)->primary();
+            $table->char('maBienThe', 10);
+            $table->char('duongDan', 255);
         });
     }
 

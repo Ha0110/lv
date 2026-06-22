@@ -13,9 +13,9 @@ return new class extends Migration
         }
 
         Schema::create('thuoctinh', function (Blueprint $table) {
-            $table->string('maTT')->primary();
-            $table->string('maDanhMuc')->nullable();
-            $table->string('tenThuocTinh');
+            $table->char('maTT', 10)->primary();
+            $table->char('maDanhMuc', 10)->nullable();
+            $table->string('tenThuocTinh', 100);
         });
     }
 

@@ -8,16 +8,17 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('chitietgiohang', function (Blueprint $table) {
-            $table->string('maChiTiet')->primary();
-            $table->string('maGioHang');
-            $table->string('maBienThe');
-            $table->integer('soLuong');
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
+        if (Schema::hasTable('chitietgiohang')) {
+            return;
+        }
 
-            $table->foreign('maGioHang')->references('maGioHang')->on('giohang')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('maBienThe')->references('maBienThe')->on('bienthesanpham')->onDelete('cascade')->onUpdate('cascade');
+        Schema::create('chitietgiohang', function (Blueprint $table) {
+            $table->char('maChiTiet', 10)->primary();
+            $table->char('maGioHang', 10);
+            $table->char('maBienThe', 10);
+            $table->integer('soLuong');
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

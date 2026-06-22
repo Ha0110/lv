@@ -8,18 +8,20 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('diachi')) {
+            return;
+        }
+
         Schema::create('diachi', function (Blueprint $table) {
-            $table->string('maDiaChi')->primary();
+            $table->char('maDiaChi', 10)->primary();
             $table->char('sdt', 10);
-            $table->string('tenNguoiNhan')->nullable();
+            $table->string('tenNguoiNhan', 200)->nullable();
             $table->char('sdtNguoiNhan', 10)->nullable();
             $table->text('diaChi')->nullable();
             $table->string('thanhPho')->nullable();
             $table->boolean('isDefault')->default(false);
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
-
-            $table->foreign('sdt')->references('sdt')->on('nguoidung')->onDelete('cascade')->onUpdate('cascade');
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

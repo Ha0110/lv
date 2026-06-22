@@ -8,21 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasTable('donhang')) {
+            return;
+        }
+
         Schema::create('donhang', function (Blueprint $table) {
-            $table->string('maDonHang')->primary();
+            $table->char('maDonHang', 10)->primary();
             $table->char('sdt', 10)->nullable();
-            $table->string('tenNguoiNhan');
+            $table->string('tenNguoiNhan', 200);
             $table->char('sdtNguoiNhan', 10);
-            $table->string('email')->nullable();
+            $table->char('email', 255)->nullable();
             $table->text('diaChiGiaoHang');
             $table->decimal('tongTien', 12, 2);
             $table->integer('diemDaSuDung')->default(0);
             $table->integer('diemDuocTich')->default(0);
             $table->enum('trangThai', ['cho_xu_ly','dang_xu_ly','da_giao','huy'])->default('cho_xu_ly');
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
-
-            $table->foreign('sdt')->references('sdt')->on('nguoidung')->onDelete('set null')->onUpdate('cascade');
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

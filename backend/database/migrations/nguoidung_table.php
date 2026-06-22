@@ -13,17 +13,19 @@ return new class extends Migration
         }
 
         Schema::create('nguoidung', function (Blueprint $table) {
-            $table->string('sdt')->primary();
-            $table->string('email')->unique();
+            $table->char('sdt', 10)->primary();
+            $table->char('email', 255);
             $table->string('matKhau')->nullable();
-            $table->string('hoTen')->nullable();
+            $table->string('hoTen', 200)->nullable();
             $table->char('maXacNhan', 6)->nullable();
             $table->dateTime('thoiGianHetHanMaXacNhan')->nullable();
-            $table->enum('role', ['customer','admin'])->default('customer');
+            $table->enum('role', ['customer', 'admin', 'owner'])->default('customer');
             $table->boolean('emailVerified')->default(false);
             $table->integer('diemTichLuy')->default(0);
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
+
+            $table->unique('email', 'uk_email');
         });
     }
 

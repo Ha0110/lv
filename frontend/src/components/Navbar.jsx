@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
+const getStoredUser = () => {
+  try {
+    return JSON.parse(localStorage.getItem("user"));
+  } catch {
+    return null;
+  }
+};
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = getStoredUser();
 
   const isActive = (path) => location.pathname === path;
+  const isAdminUser = ["admin", "owner"].includes(user?.role);
 
   const navLinks = [
     { path: "/", label: "Trang chủ" },
@@ -15,6 +24,10 @@ export default function Navbar() {
 
 
   ];
+
+  if (isAdminUser) {
+    navLinks.push({ path: "/admin", label: "Admin" });
+  }
 
   return (
     <nav className="navbar">

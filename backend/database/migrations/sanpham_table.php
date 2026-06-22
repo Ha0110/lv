@@ -13,16 +13,13 @@ return new class extends Migration
         }
 
         Schema::create('sanpham', function (Blueprint $table) {
-            $table->string('maSanPham')->primary();
+            $table->char('maSanPham', 10)->primary();
             $table->string('tenSanPham');
-            $table->string('maDanhMuc');
-            $table->string('maHangSanXuat')->nullable();
+            $table->char('maDanhMuc', 10);
+            $table->char('maHangSanXuat', 10)->nullable();
             $table->text('moTa')->nullable();
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
-
-            $table->foreign('maDanhMuc')->references('maDanhMuc')->on('danhmuc')->onUpdate('cascade');
-            $table->foreign('maHangSanXuat')->references('maHangSanXuat')->on('hangsanxuat')->onDelete('set null')->onUpdate('cascade');
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

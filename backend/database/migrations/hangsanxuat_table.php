@@ -13,10 +13,10 @@ return new class extends Migration
         }
 
         Schema::create('hangsanxuat', function (Blueprint $table) {
-            $table->string('maHangSanXuat')->primary();
-            $table->string('tenHang')->unique();
-            $table->timestamp('createdAt')->useCurrent();
-            $table->timestamp('updatedAt')->useCurrent();
+            $table->char('maHangSanXuat', 10)->primary();
+            $table->string('tenHang', 150)->unique('uk_tenHang');
+            $table->dateTime('createdAt')->useCurrent();
+            $table->dateTime('updatedAt')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

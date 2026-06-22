@@ -13,14 +13,11 @@ return new class extends Migration
         }
 
         Schema::create('chitietthuoctinh', function (Blueprint $table) {
-            $table->string('maBienThe');
-            $table->string('maTT');
+            $table->char('maBienThe', 10);
+            $table->char('maTT', 10);
             $table->string('giaTri')->nullable();
 
             $table->primary(['maBienThe', 'maTT']);
-
-            $table->foreign('maBienThe')->references('maBienThe')->on('bienthesanpham')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('maTT')->references('maTT')->on('thuoctinh')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

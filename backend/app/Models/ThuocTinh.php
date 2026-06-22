@@ -20,6 +20,15 @@ class ThuocTinh extends Model
         'tenThuocTinh'
     ];
 
+    public function danhMuc()
+    {
+        return $this->belongsTo(
+            DanhMuc::class,
+            'maDanhMuc',
+            'maDanhMuc'
+        );
+    }
+
     public function chiTietThuocTinhs()
     {
         return $this->hasMany(

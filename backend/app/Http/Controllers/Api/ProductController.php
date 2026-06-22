@@ -5,39 +5,39 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\SanPham;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     /**
-     * Build full URL for image
+     * Tạo URL đầy đủ cho ảnh sản phẩm.
      */
     private function buildImageUrl($path)
     {
         if (!$path) {
             return 'https://images.pexels.com/photos/829455/pexels-photo-829455.jpeg?auto=compress&cs=tinysrgb&w=600';
         }
-        
-        // If already a full URL, return as-is
+
+        // Nếu dữ liệu đã là URL đầy đủ thì giữ nguyên.
         if (str_starts_with($path, 'http')) {
             return $path;
         }
         
-        // Build full URL from relative path
-        $appUrl = rtrim(config('app.url'), '/');
-        return $appUrl . '/storage/' . $path;
+        // Đường dẫn còn lại là file trong storage public của Laravel.
+        return Storage::disk('public')->url($path);
     }
 
     /**
-     * Transform variant (biến thế) to product format
+     * Chuyển một biến thể thành dữ liệu sản phẩm cho frontend.
      */
     private function transformBienThe($bienThe, $sanPham)
     {
-        // Get images from variant
+        // Lấy toàn bộ ảnh của biến thể, ảnh đầu tiên là ảnh đại diện.
         $imagesPaths = $bienThe->anhs?->pluck('duongDan')->toArray() ?? [];
         $images = array_map(fn($path) => $this->buildImageUrl($path), $imagesPaths);
         $firstImage = $images[0] ?? $this->buildImageUrl(null);
         
-        // Get specifications from chi tiết thuộc tính
+        // Thuộc tính vừa dùng để hiển thị bảng thông số, vừa ghép vào tên đầy đủ.
         $specs = [];
         $specsStrings = [];
         if ($bienThe->chiTietThuocTinhs) {
@@ -48,13 +48,13 @@ class ProductController extends Controller
                         'name' => $chiTiet->thuocTinh->tenThuocTinh,
                         'value' => $chiTiet->giaTri,
                     ];
-                    // Collect spec values for full product name
+                    // Lưu giá trị thuộc tính để ghép tên biến thể dễ phân biệt.
                     $specsStrings[] = $chiTiet->giaTri;
                 }
             }
         }
 
-        // Build full product name: Manufacturer + Product + Specs
+        // Tên hiển thị gồm hãng + tên sản phẩm + thông số của biến thể.
         $manufacturer = $sanPham->hangSanXuat?->tenHang ?? '';
         $fullName = $sanPham->tenSanPham;
         if ($manufacturer) {
@@ -82,7 +82,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Get all products (flatten all variants as separate items)
+     * Lấy tất cả sản phẩm, mỗi biến thể được trả như một sản phẩm riêng.
      */
     public function index()
     {
@@ -105,7 +105,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Get single product by variant ID
+     * Lấy chi tiết sản phẩm theo mã biến thể.
      */
     public function show($id)
     {
@@ -124,7 +124,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Get products by category (flatten all variants)
+     * Lấy sản phẩm theo danh mục, vẫn tách từng biến thể thành item riêng.
      */
     public function byCategory($categoryId)
     {
@@ -149,7 +149,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Get all categories
+     * Lấy danh mục cho bộ lọc ngoài trang cửa hàng.
      */
     public function categories()
     {
@@ -165,7 +165,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Search products (flatten all variants)
+     * Tìm sản phẩm theo tên hoặc mô tả.
      */
     public function search(Request $request)
     {
